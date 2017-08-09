@@ -24,7 +24,7 @@ public class PhporApplication {
 
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(PhporApplication.class);
-        app.setWebEnvironment(false);
+        app.setWebEnvironment(false);   // web 环境下也会执行CommandLineRunner的
         app.setBannerMode(Banner.Mode.OFF);
         app.run(args);
     }
