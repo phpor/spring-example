@@ -57,6 +57,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>hello.sandbox.web.WebApplication</mainClass> <!-- 参考： http://www.mkyong.com/spring-boot/spring-boot-which-main-class-to-start/ -->
+                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../js/jquery-3.2.1.min.js"></script>
+</head>
+<body>
+<h2>Maven example</h2>
+1.1 Define single main class via start-class properties
+
+pom.xml
+<div id="eg1"></div>
+
+
+1.2 Alternatively, define the main class in the spring-boot-maven-plugin
+
+pom.xml
+<div id="eg2"></div>
+
+
+<div>
+    <h3>参考</h3>
+    <ol>
+        <li><a href="http://www.mkyong.com/spring-boot/spring-boot-which-main-class-to-start/">http://www.mkyong.com/spring-boot/spring-boot-which-main-class-to-start/</a></li>
+    </ol>
+</div>
+<script>
+    var eg1 = "<properties>\n" +
+            "\t<!-- The main class to start by executing java -jar -->\n" +
+            "\t<start-class>com.mkyong.SpringBootWebApplication</start-class>\n" +
+            "</properties>";
+    $("#eg1").text(eg1);
+
+    var eg2 = "<build>\n\
+            <plugins>\n\
+            <plugin>\n\
+            <groupId>org.springframework.boot</groupId>\n\
+            <artifactId>spring-boot-maven-plugin</artifactId>\n\
+            <configuration>\n\
+            <mainClass>com.mkyong.SpringBootWebApplication</mainClass>\n\
+            </configuration>\n\
+            </plugin>\n\
+            </plugins>\n\
+            </build>";
+    $("#eg2").text(eg2);
+</script>
+
+</body>
+</html>
