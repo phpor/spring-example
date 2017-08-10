@@ -15,7 +15,7 @@ import java.net.URISyntaxException;
 @SpringBootApplication
 public class ContextApplication {
     public static void main(String[] args) {
-        test1();
+        test2();
     }
 
     // 关于Bean被上下文管理的逻辑
@@ -36,11 +36,12 @@ public class ContextApplication {
     // 注意AnnotationConfigApplicationContext 与 ApplicationContext 的差异，前者有register方法，后者没有
     public static void test2() {
 
-        AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(ContextApplication.class);
-        // 通过register方法向上下文注册Bean
+        AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
+        // 通过register方法向上下文注册Bean， 可以直接注册需要的Bean也可以注册一个带有注解（@ComponentScan）的类
         ctx.register(HttpClientImpl.class);
-
-        IHttp http = ctx.getBean(IHttp.class); // 这个写法比较正规些
+        //ctx.register(appconfig.class);
+        ctx.refresh();      // register 完需要refresh
+        IHttp http = ctx.getBean(IHttp.class);
 
         try {
             System.out.print(http.request("http://baidu.com"));
