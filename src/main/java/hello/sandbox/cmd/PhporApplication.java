@@ -12,6 +12,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+
 
 /**
  * 一个命令行版本的spring应用
@@ -43,11 +46,16 @@ public class PhporApplication {
     @Autowired
     IHttp http;
 
-    @Bean
-    @Order
-    public CommandLineRunner demo2() {
-        return args -> {
+
+    public void test_http(IHttp http) {
+        try {
             System.out.println(http.request("http://baidu.com"));
-        };
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void test_sql() {
+
     }
 }
