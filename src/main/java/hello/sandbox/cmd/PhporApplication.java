@@ -1,8 +1,5 @@
 package hello.sandbox.cmd;
 
-
-import hello.interfaces.IHttp;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -11,9 +8,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
 
 
 /**
@@ -24,7 +18,7 @@ import java.net.URISyntaxException;
 
 @SpringBootApplication
 @Configuration
-@ComponentScan("hello.beans")
+@ComponentScan({"hello.beans", "hello.cmds", "hello.config"})
 public class PhporApplication {
 
     public static void main(String[] args) {
@@ -32,30 +26,14 @@ public class PhporApplication {
         app.setWebEnvironment(false);
         app.setBannerMode(Banner.Mode.OFF);
         app.run(args);
+
     }
 
     @Bean
     @Order
     public CommandLineRunner demo1() {
-        System.out.println("test");
         return args -> {
-            System.out.println(String.join(" ", args));
+            System.out.print("hello");
         };
-    }
-
-    @Autowired
-    IHttp http;
-
-
-    public void test_http(IHttp http) {
-        try {
-            System.out.println(http.request("http://baidu.com"));
-        } catch (IOException | URISyntaxException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void test_sql() {
-
     }
 }
