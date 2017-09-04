@@ -1,46 +1,34 @@
 package hello.sandbox.context;
 
 import hello.beans.HttpClientImpl;
+import hello.cmds.BookCmd;
+import hello.dao.interfaces.IBook;
 import hello.interfaces.ICmd;
 import hello.interfaces.IHttp;
-import org.apache.commons.cli.*;
 import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.ibatis.mapping.Environment;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.ibatis.transaction.TransactionFactory;
+import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Primary;
 
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class ContextApplication {
     public static void main(String[] args) {
-        List<String> list = new ArrayList<String>(Arrays.asList(args));
-        list.add("-c");
-        list.add("dataSourceCmd");
-        list.remove("--spring.output.ansi.enabled=always");
-        args = list.toArray(new String[0]);
-
-        Options options = new Options();
-        options.addOption(new Option("c", "help", true, "case of test"));
-        options.addOption(new Option("h", false, "show this help"));
-
-        CommandLineParser commandLineParser = new PosixParser();
-        CommandLine cmdline = null;
-        try {
-            cmdline = commandLineParser.parse(options, args);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return;
-        }
-        String what = cmdline.getOptionValue("c");
         ApplicationContext ctx = new AnnotationConfigApplicationContext(cmdconfig.class);
-        ICmd cmd = ctx.getBean(what, ICmd.class);
+        ICmd cmd = ctx.getBean("bookCmd", ICmd.class);
         cmd.run(args);
     }
 
@@ -82,7 +70,7 @@ public class ContextApplication {
 
 
     @EnableAutoConfiguration
-    @ComponentScan({ "hello.cmds", "hello.beans"})
+    @ComponentScan({ "hello.cmds", "hello.beans", "hello.dao"})
     static class cmdconfig {
 
         // 数据源的定义
@@ -90,10 +78,30 @@ public class ContextApplication {
         public DataSource getDataSource() {
             BasicDataSource ds = new BasicDataSource();
             ds.setDriverClassName("com.mysql.jdbc.Driver");
-            ds.setUrl("jdbc:mysql://172.16.22.37/test");
+            ds.setUrl("jdbc:mysql://172.16.22.37/test?characterEncoding=UTF-8");
             ds.setUsername("spring");
             ds.setPassword("spring-password");
             return ds;
         }
+
+        @Bean
+        @Primary
+        @Autowired
+        public SqlSession getSqlSession(DataSource dataSource) {
+            TransactionFactory transactionFactory = new JdbcTransactionFactory();
+
+            Configuration configuration = new Configuration(new Environment("default", transactionFactory, dataSource));
+            configuration.addMapper(IBook.class); // todo: 如何自动扫描mapper？
+
+            SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
+            return sqlSessionFactory.openSession();
+        }
+
+        @Bean("bookCmd")
+        public ICmd getIcmd() {
+            return new BookCmd();
+        }
     }
 }
+
+

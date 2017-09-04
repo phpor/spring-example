@@ -15,11 +15,7 @@ public class JdbcTmpl implements ICmd{
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    //@Autowired
-    //private DataSource ds;
-
     public void query() {
-      //  JdbcTemplate jdbcTemplate = new JdbcTemplate(ds);
         List<Map<String, Object>> list = jdbcTemplate.queryForList("select 1");
         list.forEach(args -> {
             args.forEach((k,v) -> {
