@@ -1,20 +1,20 @@
 package hello.dao.entities;
 
-import javax.persistence.Entity;
-
-@Entity
-public class Book extends Base {
+public class Book {
     private String id;
+
     private String name;
+
+    private Integer price;
+
     private String isbn;
-    private int price;
 
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.id = id == null ? null : id.trim();
     }
 
     public String getName() {
@@ -22,7 +22,15 @@ public class Book extends Base {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = name == null ? null : name.trim();
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
     }
 
     public String getIsbn() {
@@ -30,25 +38,6 @@ public class Book extends Base {
     }
 
     public void setIsbn(String isbn) {
-        this.isbn = isbn;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
-
-    public Book() {}
-
-    public Book(String id, String name, String isbn, int price) {
-        super();
-        this.id = id;
-        this.name = name;
-        this.isbn = isbn;
-        this.price = price;
+        this.isbn = isbn == null ? null : isbn.trim();
     }
 }

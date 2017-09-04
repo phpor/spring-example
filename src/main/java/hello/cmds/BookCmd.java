@@ -16,12 +16,33 @@ public class BookCmd implements ICmd{
     @Autowired
     private SqlSession sqlSession;
 
-
     @Override
     public void run(String[] args) {
+        selectByName();
+    }
+
+    private void selectByName() {
+        IBook dbBook = sqlSession.getMapper(IBook.class);
+
+        Book book = new Book();
+        book.setName("西游记");
+        List<Book> books = dbBook.selectByName("西游记");
+        int price = 0;
+        for(Book book2:books) {
+            System.out.printf("%s\n", book2.getName());
+            price = book2.getPrice();
+        }
+    }
+
+    private void allTest() {
 
         IBook dbBook = sqlSession.getMapper(IBook.class);
-        Book book = new Book("N1234567", "西游记", StringUtil.get32UUID(), 10);
+
+        Book book = new Book();
+        book.setId("N1234567");
+        book.setName("西游记");
+        book.setIsbn(StringUtil.get32UUID());
+        book.setPrice(10);
         dbBook.insert(book);
         sqlSession.commit();
 

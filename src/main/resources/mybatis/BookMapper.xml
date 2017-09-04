@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hello.dao.interfaces.IBook">
+    <!-- resultMap 用于定义结果集bean，以及和结果集的属性、字段对应关系，或者现有bean的属性和结果集不完全匹配的情况 -->
+    <resultMap type="hello.dao.entities.Book" id="book">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="price" column="price"/>
+        <result property="isbn" column="isbn"/>
+    </resultMap>
+
+    <select id="selectById" resultType="hello.dao.entities.Book">
+        SELECT * FROM book WHERE id = #{id}
+    </select>
+
+    <!-- 当这里定义的paramType和接口中定义的参数类型不一致时，以接口中定义的为准 -->
+    <select id="selectByName" resultType="hello.dao.entities.Book">
+        SELECT * FROM book WHERE name = #{name}
+    </select>
+
+    <insert id="insert"> <!-- tag 用于决定sql语句的类型， id 用于定位哪条sql语句 -->
+        insert into book values(#{id}, #{name}, #{price}, #{isbn})
+    </insert>
+
+    <!-- 很多时候，resultType 是在xml中定义的，是接口上不能完全表达的，所以，需要明确定义resultType -->
+    <!-- 但是，参数类型是从接口上可以查到的，为什么还需要定义？ -->
+    <update id="updateByName" parameterType="hello.dao.entities.Book">
+        update book set price=#{price} where name=#{name}
+    </update>
+
+    <delete id="deleteByName">
+        delete from book where name=#{name}
+    </delete>
+</mapper>

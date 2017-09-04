@@ -6,6 +6,7 @@ import hello.dao.interfaces.IBook;
 import hello.interfaces.ICmd;
 import hello.interfaces.IHttp;
 import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
@@ -23,6 +24,7 @@ import org.springframework.context.annotation.Primary;
 
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.io.Reader;
 import java.net.URISyntaxException;
 
 public class ContextApplication {
@@ -85,17 +87,26 @@ public class ContextApplication {
         }
 
         @Bean
-        @Primary
         @Autowired
         public SqlSession getSqlSession(DataSource dataSource) {
             TransactionFactory transactionFactory = new JdbcTransactionFactory();
-
+            // 程序上动态修改配置
             Configuration configuration = new Configuration(new Environment("default", transactionFactory, dataSource));
             configuration.addMapper(IBook.class); // todo: 如何自动扫描mapper？
 
             SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
             return sqlSessionFactory.openSession();
         }
+
+        @Bean
+        @Primary
+        public SqlSession getSqlSessionByXML() throws IOException {
+            Reader reader = Resources.getResourceAsReader("config/mybatis-config.xml");
+            SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, "default");
+           // sqlSessionFactory.getConfiguration().addMapper(IBook.class);
+            return sqlSessionFactory.openSession();
+        }
+
 
         @Bean("bookCmd")
         public ICmd getIcmd() {
