@@ -21,9 +21,11 @@ public interface IBook<T> extends IBase<T> {
     @Delete("delete from book where name=#{name}")
     public int deleteByName(@Param("book") Book book);
 
-
-    // 如何注解才能只返回单个对象呢？
     @Select("select * from book where name=#{name}")
     public List<Book> selectByName(@Param("name") String name);
+
+    // 当定义返回值为单个对象时，自然只返回单个对象，如果结果集为多条记录则抛异常
+    @Select("select * from book where id=#{id}")
+    public Book selectById(@Param("id") String id);
 
 }

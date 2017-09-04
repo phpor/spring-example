@@ -21,10 +21,11 @@ public class BookCmd implements ICmd{
     public void run(String[] args) {
 
         IBook dbBook = sqlSession.getMapper(IBook.class);
-        Book book = new Book("N1234563", "西游记6", StringUtil.get32UUID(), 10);
+        Book book = new Book("N1234567", "西游记", StringUtil.get32UUID(), 10);
         dbBook.insert(book);
         sqlSession.commit();
 
+        String id = book.getId();
         book = new Book();
         book.setName("西游记");
         List<Book> books = dbBook.selectByName("西游记");
@@ -39,11 +40,11 @@ public class BookCmd implements ICmd{
         dbBook.updateByName(book);
         sqlSession.commit();
 
-        book = (Book)dbBook.selectByName(book.getName()).get(0);
+        book = dbBook.selectById(id);
         System.out.printf("price: %d\n", book.getPrice());
 
         book = new Book();
-        book.setName("西游记6");
+        book.setName("西游记");
         dbBook.deleteByName(book);
         sqlSession.commit();
     }
